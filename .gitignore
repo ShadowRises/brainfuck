@@ -1,0 +1,5 @@
+*.o
+*.d
+obj/**
+brainfuck
+compile_commands.json
