@@ -16,9 +16,31 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define PROGRAM_NAME "brainfuck"
+
+void
+usage (int status)
+{
+  printf ("\
+Usage: %s FILE\n\
+", PROGRAM_NAME);
+
+  fputs ("\
+Read a FILE writen in Brainfuck programming language and interpret it.\n\
+", stdout);
+  exit (status);
+}
 
 int
 main (int argc, char* argv[])
 {
+  if (argc < 2)
+    usage (EXIT_FAILURE);
+  else if (strncmp (argv[1], "-h", 2) == 0 ||
+           strncmp (argv[1], "--help", 2) == 0)
+    usage (EXIT_SUCCESS);
+
   return EXIT_SUCCESS;
 }
