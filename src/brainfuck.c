@@ -20,6 +20,13 @@
 
 #define PROGRAM_NAME "brainfuck"
 
+#define ERR_AND_DIE(X)    \
+  if (X == NULL)          \
+    {                     \
+      perror("Error");    \
+      exit(EXIT_FAILURE); \
+    }
+
 void
 usage (int status)
 {
@@ -36,11 +43,17 @@ Read a FILE writen in Brainfuck programming language and interpret it.\n\
 int
 main (int argc, char* argv[])
 {
+  FILE* file;
+  
   if (argc < 2)
     usage (EXIT_FAILURE);
   else if (strncmp (argv[1], "-h", 2) == 0 ||
            strncmp (argv[1], "--help", 2) == 0)
     usage (EXIT_SUCCESS);
 
+  file = fopen (argv[1], "r");
+  ERR_AND_DIE (file);
+  fclose (file);
+  
   return EXIT_SUCCESS;
 }
