@@ -88,11 +88,11 @@ main (int argc, char* argv[])
           break;
 
         case '.':
-          printf("%c", *ptr);
+          printf ("%c", *ptr);
           break;
 
         case ',':
-          *ptr = fgetc(stdin);
+          *ptr = fgetc (stdin);
           break;
           
         default:
