@@ -21,11 +21,11 @@
 
 #define PROGRAM_NAME "brainfuck"
 
-#define ERR_AND_DIE(X)    \
-  if (X == NULL)          \
-    {                     \
-      perror("Error");    \
-      exit(EXIT_FAILURE); \
+#define ERR_AND_DIE(X)     \
+  if (X == NULL)           \
+    {                      \
+      perror ("Error");    \
+      exit (EXIT_FAILURE); \
     }
 
 #define BUFF_SIZE 30000
@@ -63,7 +63,7 @@ main (int argc, char* argv[])
 
   while ((c = fgetc (file)) != EOF)
     {
-      switch ((char) c)
+      switch (c)
         {
         case '+':
           (*ptr)++;
