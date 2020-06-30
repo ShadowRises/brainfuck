@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #define PROGRAM_NAME "brainfuck"
@@ -26,6 +27,8 @@
       perror("Error");    \
       exit(EXIT_FAILURE); \
     }
+
+#define BUFF_SIZE 30000
 
 void
 usage (int status)
@@ -43,6 +46,10 @@ Read a FILE writen in Brainfuck programming language and interpret it.\n\
 int
 main (int argc, char* argv[])
 {
+  uint8_t BUFF[BUFF_SIZE] = { 0 };
+  uint8_t *ptr = BUFF;
+  
+  int c;
   FILE* file;
   
   if (argc < 2)
@@ -53,6 +60,46 @@ main (int argc, char* argv[])
 
   file = fopen (argv[1], "r");
   ERR_AND_DIE (file);
+
+  while ((c = fgetc (file)) != EOF)
+    {
+      switch ((char) c)
+        {
+        case '+':
+          (*ptr)++;
+          break;
+
+        case '-':
+          (*ptr)--;
+          break;
+
+        case '>':
+          if (ptr == BUFF + BUFF_SIZE - 1)
+            ptr = BUFF;
+          else
+            ptr++;
+          break;
+
+        case '<':
+          if (ptr == BUFF)
+            ptr = BUFF + BUFF_SIZE - 1;
+          else
+            ptr--;
+          break;
+
+        case '.':
+          printf("%c", *ptr);
+          break;
+
+        case ',':
+          *ptr = fgetc(stdin);
+          break;
+          
+        default:
+          break;
+        }
+    }
+  
   fclose (file);
   
   return EXIT_SUCCESS;
