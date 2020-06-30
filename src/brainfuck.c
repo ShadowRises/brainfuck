@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define PROGRAM_NAME "brainfuck"
+#define PROGRAM_NAME ("brainfuck")
 
 #define ERR_AND_DIE(X)     \
   if (X == NULL)           \
@@ -50,6 +50,7 @@ main (int argc, char* argv[])
   uint8_t *ptr = BUFF;
   
   int c;
+  long int start_loop = 0, end_loop = 0;
   FILE* file;
   
   if (argc < 2)
@@ -94,6 +95,29 @@ main (int argc, char* argv[])
         case ',':
           *ptr = fgetc (stdin);
           break;
+
+        case '[':
+          if (*ptr != 0)
+              start_loop = ftell(file);
+          else if (end_loop != 0)
+              fseek(file, end_loop, SEEK_SET);
+          else
+            {
+              start_loop = 0;
+              while ((c = fgetc (file)) != EOF)
+                {
+                  if (c == ']')
+                    break;
+                }
+            }
+          break;
+
+        case ']':
+          if (*ptr != 0)
+            {
+              end_loop = ftell(file);
+              fseek(file, start_loop, SEEK_SET);
+            }
           
         default:
           break;
