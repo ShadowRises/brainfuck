@@ -38,7 +38,7 @@ Usage: %s FILE\n\
 ", PROGRAM_NAME);
 
   fputs ("\
-Read a FILE writen in Brainfuck programming language and interpret it.\n\
+Read a FILE written in Brainfuck programming language and interpret it.\n\
 ", stdout);
   exit (status);
 }
