@@ -19,6 +19,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "stack.h"
+
 #define PROGRAM_NAME ("brainfuck")
 
 #define ERR_AND_DIE(X)     \
@@ -52,6 +54,7 @@ main (int argc, char* argv[])
   int c;
   long int start_loop = 0, end_loop = 0;
   FILE* file;
+  stack_t stack;
   
   if (argc < 2)
     usage (EXIT_FAILURE);
@@ -62,6 +65,7 @@ main (int argc, char* argv[])
   file = fopen (argv[1], "r");
   ERR_AND_DIE (file);
 
+  stack = init_stack ();
   while ((c = fgetc (file)) != EOF)
     {
       switch (c)
@@ -125,6 +129,7 @@ main (int argc, char* argv[])
     }
   
   fclose (file);
+  free_stack (&stack);
   
   return EXIT_SUCCESS;
 }

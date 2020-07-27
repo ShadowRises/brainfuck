@@ -5,5 +5,5 @@ A simple Brainfuck interpreter written in C.
 ## Compiling
 To compile the program, just run :
 ```shell
-$ make
+$ make [OPT=OPTIONAL_COMPILATION_FLAGS]
 ```
