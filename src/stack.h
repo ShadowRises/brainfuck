@@ -25,7 +25,8 @@ typedef enum
 
 typedef struct node_t
 {
-  long position;
+  long start_position;
+  long end_position;
   struct node_t *next;
 } node_t;
 
@@ -41,12 +42,15 @@ void
 free_stack (stack_t*);
 
 void
-push_stack (long, stack_t*);
+push_stack (long, long, stack_t*);
 
 node_t
 pop_stack (stack_t*);
 
 node_t
 top_stack (stack_t*);
+
+void
+update_top_stack (long end, stack_t*);
 
 #endif /* STACK_H */

@@ -42,10 +42,11 @@ free_stack (stack_t *stack)
 }
 
 void
-push_stack (long pos, stack_t *stack)
+push_stack (long s_pos, long e_pos, stack_t *stack)
 {
   node_t *temp = (node_t*) malloc (sizeof (node_t));
-  temp->position = pos;
+  temp->start_position = s_pos;
+  temp->end_position = e_pos;
   temp->next = NULL;
   
   if (stack->top == NULL)
@@ -60,10 +61,14 @@ push_stack (long pos, stack_t *stack)
 node_t
 pop_stack (stack_t *stack)
 {
-  if (stack != NULL)
+  node_t res = { .start_position = -1,
+                 .end_position = -1 };
+  
+  if (stack != NULL && stack->top != NULL)
     {
       node_t *temp = stack->top->next;
-      node_t res = *temp;
+      if (temp != NULL)
+        res = *temp;
       
       res.next = NULL;
       
@@ -73,14 +78,25 @@ pop_stack (stack_t *stack)
       return res;
     }
   else
-    return (node_t) { .position = -1,
-                      .next = NULL };
+    return res; 
 }
 
 node_t
 top_stack (stack_t *stack)
 {
-  node_t res = *(stack->top);
+  node_t res;
+  if (stack->top)
+    res = *(stack->top);
+  else
+    res = (node_t) { .start_position = -1,
+                     .end_position = -1 };
   res.next = NULL;
   return res;
+}
+
+void
+update_top_stack (long end, stack_t *stack)
+{
+  if (stack != NULL && stack->top != NULL)
+    stack->top->end_position = end;
 }

@@ -52,7 +52,6 @@ main (int argc, char* argv[])
   uint8_t *ptr = BUFF;
   
   int c;
-  long int start_loop = 0, end_loop = 0;
   FILE* file;
   stack_t stack;
   
@@ -68,6 +67,7 @@ main (int argc, char* argv[])
   stack = init_stack ();
   while ((c = fgetc (file)) != EOF)
     {
+      node_t top;
       switch (c)
         {
         case '+':
@@ -101,28 +101,55 @@ main (int argc, char* argv[])
           break;
 
         case '[':
+          top = top_stack (&stack);
+          
           if (*ptr != 0)
-              start_loop = ftell(file);
-          else if (end_loop != 0)
-              fseek(file, end_loop, SEEK_SET);
+            push_stack (ftell(file), -1, &stack);
+          else if (top.end_position != -1 && ftell (file) == top.start_position)
+              fseek (file, top.end_position, SEEK_SET);
           else
             {
-              start_loop = 0;
               while ((c = fgetc (file)) != EOF)
                 {
-                  if (c == ']')
-                    break;
+                  if (c == '[')
+                    {
+                      push_stack (ftell (file), -1, &stack);
+                      continue;
+                    }
+                  else if (c == ']')
+                    {
+                      node_t pop = pop_stack (&stack);
+                      if (pop.start_position == top.start_position)
+                        break;
+                    }
                 }
             }
           break;
 
         case ']':
-          if (*ptr != 0)
+          top = top_stack (&stack);
+          if (top.start_position == -1)
             {
-              end_loop = ftell(file);
-              fseek(file, start_loop, SEEK_SET);
+              fprintf (stderr,
+                       "Error : no matching '[' for ']' at %ld\n",
+                       ftell (file));
+              free_stack (&stack);
+              exit (-1);
             }
-          
+          else if (*ptr != 0)
+            {
+
+              if (top.end_position == -1)
+                  update_top_stack (ftell (file), &stack);
+              
+              fseek(file, top.start_position, SEEK_SET);
+            }
+          else
+            pop_stack (&stack);
+
+          break;
+        
+      
         default:
           break;
         }
